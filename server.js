@@ -1,3 +1,5 @@
+'use strict';
+
 require('dotenv').config();  // .envファイルの読み込み
 const express = require('express');
 const path = require('path');
