@@ -1,24 +1,22 @@
-'use strict';
+// .envファイルの読み込み
+require('dotenv').config();
 
-require('dotenv').config();  // .envファイルの読み込み
-const express = require('express');
-const path = require('path');
-const app = express();
+// 環境変数からアプリケーションIDを取得
+const applicationId = process.env.APPLICATION_ID;
 
-// 静的ファイルの提供（publicフォルダを参照）
-app.use(express.static(path.join(__dirname, 'public')));
+// 環境変数を使ってリクエストを送信する関数
+async function fetchConfig() {
+  try {
+    const response = await fetch('/config');  // サーバー上の/configエンドポイントにリクエストを送信
+    const config = await response.json();     // レスポンスをJSON形式に変換
+    console.log('Application ID:', config.applicationId);
+  } catch (error) {
+    console.error('エラー:', error);
+  }
+}
 
-// 環境変数をクライアントに提供するエンドポイントの定義
-app.get('/config', (req, res) => {
-  res.json({
-    applicationId: process.env.APPLICATION_ID
-  });
-});
-
-// ルートの定義
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html')); // index.htmlを返す
-});
+// fetchConfig関数を実行
+fetchConfig();
 
 // サーバーの起動
 const port = process.env.PORT || 4000;
